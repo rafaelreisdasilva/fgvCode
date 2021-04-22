@@ -93,19 +93,23 @@ for index, row in flattened.iterrows():
         flattened.loc[index,"CHOSEN_VALUE_LOOKING_RMSE_1"]=flattened.loc[index,"CALCULATED_VALUE_MODEL_1"]
     else:
         flattened.loc[index,"WEEK_8"]=media
-        flattened["RMSE_MODEL_1"]=rms2
-        flattened["CHOSEN_VALUE_LOOKING_RMSE_1"]=media
-
-#dataframe de output
-print(data_total.shape)
-print(flattened.shape)
-for index, row in data_total.iterrows():
-    if (row["WEEK_NO_BINNED"] =="(84, 96]"):
-      data_total.loc[index,"WEEK_NO_BINNED"] = flattened.loc[index,"WEEK_8"]
+        flattened.loc[index,"RMSE_MODEL_1"]=rms2
+        flattened.loc[index,"CHOSEN_VALUE_LOOKING_RMSE_1"]=media
+flattened = flattened[['household_key','WEEK_8']]
 
 data_total = data_total[['household_key','WEEK_NO_BINNED','SALES_VALUE','COUPON_DISC','COUPON_DISC_BOOL']]
-data_total.to_csv("dataset_Rafael_Reis_Silva.csv")
 
+#dataframe de output
+for index, row in data_total.iterrows():
+        if ((row["WEEK_NO_BINNED"] =='(84, 96]')):
+            for index2, row2 in flattened.iterrows():
+                if row['household_key']==row2["household_key"]:
+                    data_total.loc[index,"SALES_VALUE"] = row2["WEEK_8"]
+                    break
+
+
+data_total.to_csv("dataset_Rafael_Reis_Silva.csv")
+print("acabouu")
 
 
     #y_actual= yteste
